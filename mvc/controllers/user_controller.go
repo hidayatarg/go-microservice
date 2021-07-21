@@ -1,17 +1,33 @@
 package controllers
 
 import (
-	"log"
+	"encoding/json"
+	//"github.com/hidayatarg/go-microservice/mvc/domain"
+	"github.com/hidayatarg/go-microservice/mvc/services"
 	"net/http"
 	"strconv"
 )
 
-func GetUser(resp http.ResponseWriter, req *http.Request){
-	userId, err := strconv.ParseInt(req.URL.Query().Get("user_id"), 10, 10)
+func GetUser(resp http.ResponseWriter, req *http.Request) {
+	userId, err := strconv.ParseInt(req.URL.Query().Get("user_id"), 10, 64)
 	if err != nil {
 		// return bad request
+		resp.WriteHeader(http.StatusBadRequest)
+		resp.Write([]byte("user_id must be a number"))
+
 		return
 	}
 
-	user, err :=
+	user, err := services.GetUser(userId)
+	if err != nil {
+		// Handle the error and return to the client
+		resp.WriteHeader(http.StatusNotFound)
+		resp.Write([]byte(err.Error()))
+
+		return
+	}
+	// otherwise
+	// return user to the client
+	jsonValue, _ := json.Marshal(user)
+	resp.Write(jsonValue)
 }

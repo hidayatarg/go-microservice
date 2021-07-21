@@ -12,9 +12,11 @@ var (
 )
 
 func GetUser(userId int64) (*User, error) {
-	user := users[userId]
-	if user == nil {
-		return nil, errors.New(fmt.Sprintf("User %v was not found", userId))
+
+	if user := users[userId]; user != nil {
+		return user, nil
+
 	}
-	return user, nil
+	return nil, errors.New(fmt.Sprintf("User %v was not found", userId))
+
 }

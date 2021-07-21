@@ -9,5 +9,9 @@ func GetUser(resp http.ResponseWriter, req *http.Request){
 }
 
 // can be written
-
+userId, err := strconv.ParseInt(req.URL.Query().Get("user_id"), 10, 10)
+if err != nil {
+// return bad request
+return
+}
 ```
